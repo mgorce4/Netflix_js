@@ -31,3 +31,55 @@ Même si certains concepts peuvent sembler abstraits au début, ils prennent tou
 Avec ce projet, je pense arriver à une application mieux structurée que celles que j’ai pu réaliser auparavant. Mon objectif est de produire un site dont l’architecture est claire, compréhensible et évolutive, même si toutes les fonctionnalités prévues ne sont pas parfaitement abouties.
 Je pense également que ce projet va me permettre de gagner en rigueur dans ma façon de coder, notamment en réfléchissant davantage en amont à l’organisation du projet plutôt que de coder directement sans structure définie.
 Enfin, j’espère que ce travail me servira de base pour les projets futurs, en réutilisant les bonnes pratiques d’architecture vues en cours et en les adaptant aux besoins spécifiques de chaque projet.
+
+## les trois couches de l'application Netflix
+### Couche Présentation (Front-end)
+C’est la partie visible par l’utilisateur. Elle permet d’interagir avec le site.
+
+Pages / vues :
+- Page d’accueil
+- Liste des films / séries
+- Page de détail d’un contenu
+
+Composants d’interface :
+- Cartes de films/séries
+- Boutons (lecture, ajout aux favoris, etc.)
+
+Gestion des actions utilisateur :
+- Clics
+- Formulaires
+- Navigation
+
+### Couche Logique Métier (Back-end)
+C’est la couche qui décide quoi faire avec les données.
+
+Contrôleurs / services :
+- Récupération des films/séries
+- Gestion des utilisateurs
+- Gestion des favoris ou de l’historique
+
+Règles métier :
+- Quels contenus afficher
+- Vérifier si un utilisateur est connecté
+- Associer un contenu à un utilisateur
+
+API :
+- Endpoints appelés par le front-end
+
+### Couche Données (Persistence)
+Elle s’occupe du stockage des informations.
+
+Base de données :
+- Films / séries
+- Utilisateurs
+- Catégories
+- Favoris / historique
+
+Entités / modèles :
+- Film
+- Série
+- Utilisateur
+
+Repositories / DAO :
+- Accès aux données
+- Requêtes SQL ou ORM
