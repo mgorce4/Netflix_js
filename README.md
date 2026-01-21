@@ -107,3 +107,17 @@ Chaque contenu peut être représenté par :
 - Informations sur le projet
 - Mention « Projet étudiant »
 - Liens simples (à propos, contact si tu veux)
+![maquette](https://github.com/mgorce4/Netflix_js/blob/main/maquette.png)
+## endpoints API
+**contenu :**
+- contents
+- contents/popular
+- contents/new
+- contents/movies
+- content/series/episode
+
+**login :**
+- auth/login
+
+**utilisateur:**
+- user/ favorites
