@@ -83,3 +83,27 @@ Entités / modèles :
 Repositories / DAO :
 - Accès aux données
 - Requêtes SQL ou ORM
+
+# Sur ma page d'accueil voici ce que je vais trouver:
+## En-tête (header)
+- Nom du site
+Menu de navigation :
+- Accueil
+- Films
+- Séries
+- Mon profil (ou Connexion)
+- Barre de recherche
+## Body 
+Sous forme de listes ou carrousels :
+- 🎥 Films populaires
+- ⭐ Contenus recommandés
+- 🆕 Nouveautés
+- 📂 Par catégories (Action, Comédie, Drame…)
+Chaque contenu peut être représenté par :
+- Une image (affiche)
+- Un titre
+- Un bouton « Voir » ou « Détails »
+## Pied de page (footer)
+- Informations sur le projet
+- Mention « Projet étudiant »
+- Liens simples (à propos, contact si tu veux)
