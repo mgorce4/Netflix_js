@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/health', (req, res) => {
  res.json({
  status: 'OK',
- message: 'API Netflix is running',
+ message: 'API Netfilm is running',
  timestamp: new Date().toISOString()
  });
 });

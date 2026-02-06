@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Route de test
 app.get('/', (req, res) => {
- res.render('index', { title: 'Admin Netflix' });
+ res.render('index', { title: 'Admin Netfilm' });
 });
 app.listen(PORT, () => {
  console.log(` Admin panel running on http://localhost:${PORT}`);

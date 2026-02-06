@@ -1,4 +1,4 @@
-# Projet Netflix
+# Projet Netfilm
 
 ## Qui suis-je?
 Je suis GORCE Max du groupe G4A étudiant en BUT informatique à l'IUT du Limousin. 
@@ -32,7 +32,7 @@ Avec ce projet, je pense arriver à une application mieux structurée que celles
 Je pense également que ce projet va me permettre de gagner en rigueur dans ma façon de coder, notamment en réfléchissant davantage en amont à l’organisation du projet plutôt que de coder directement sans structure définie.
 Enfin, j’espère que ce travail me servira de base pour les projets futurs, en réutilisant les bonnes pratiques d’architecture vues en cours et en les adaptant aux besoins spécifiques de chaque projet.
 
-## les trois couches de l'application Netflix
+## les trois couches de l'application Netfilm
 ### Couche Présentation (Front-end)
 C’est la partie visible par l’utilisateur. Elle permet d’interagir avec le site.
 
