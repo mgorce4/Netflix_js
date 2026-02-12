@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import SearchBar from './SearchBar';
 function Navbar() {
   const [isScrolled, _setIsScrolled] = useState(false);
 
@@ -39,13 +39,9 @@ function Navbar() {
 
           {/* User Section */}
           <div className="flex items-center space-x-4">
-            {/* Search Icon */}
-            <button className="hover:text-gray-300 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
 
+            <div className="flex items-center space-x-4"></div>
+            <SearchBar/>
             {/* User Avatar */}
             <div className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors">
               <span className="text-sm font-bold">U</span>

@@ -1,6 +1,8 @@
+
 import Navbar from '../components/common/Navbar';
 import MovieHero from '../components/movies/MovieHero';
 import MovieList from '../components/movies/MovieList';
+import MovieCarousel from '../components/movies/MovieCarousel';
 import Footer from '../components/layout/Footer';
 import moviesData from '../../../data/movies.json';
 
@@ -21,17 +23,17 @@ function Home() {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white">
-        <Navbar />
-      
-        <MovieHero movie={heroMovie} />
-      
-        <div className="relative -mt-32 z-10">
-            <MovieList title="Films populaires" movies={popularMovies} />
-            <MovieList title="Science-Fiction" movies={sciFiMovies} />
-            <MovieList title="Films récents" movies={recentMovies} />
-        </div>
-      
-        <Footer />
+            <Navbar />
+        
+            <MovieHero movie={heroMovie} />
+        
+            <div className="relative -mt-32 z-10">
+                <MovieList title="Films populaires" movies={popularMovies} />
+                <MovieList title="Science-Fiction" movies={sciFiMovies} />
+                <MovieCarousel title="Films récents" movies={recentMovies} />
+            </div>
+        
+            <Footer />
     </div>
   );
 }
