@@ -10,7 +10,44 @@ const genreColors = {
   'Thriller': 'bg-gray-500'
 };
 
+import { useState } from 'react';
+
+function MovieDescription({ description }) {
+  // Variable d'état pour savoir si la description est étendue ou non
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Fonction pour basculer l'état
+  const toggleDescription = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+  return (
+    <div>
+      <p className={isExpanded ? '' : 'line-clamp-2'}>{description} </p>
+      <button onClick={toggleDescription} className="text-white/70 hover:text-white text-sm mt-1">
+        {isExpanded ? 'Voir moins' : 'Voir plus'}
+      </button>
+    </div>
+  );
+}
+
+
 function MovieCard({ movie }) {
+  // Like state
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState(movie.likes || 0);
+
+  // Fonction de gestion du like
+  const handleLike = () => {
+    if (isLiked) {
+      setIsLiked(false);
+      setLikes((prev) => prev - 1);
+    } else {
+      setIsLiked(true);
+      setLikes((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className="group relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105">
       {/* Image principale */}
@@ -46,9 +83,17 @@ function MovieCard({ movie }) {
           <span className="text-gray-400">{movie.duration} min</span>
         </div>
 
-        <p className="text-sm text-gray-300 mb-4 line-clamp-2">
-          {movie.description}
-        </p>
+        <div className="text-sm text-gray-300 mb-4">
+          <MovieDescription description={movie.description} />
+        </div>
+
+        {/* Like button */}
+        <button
+          onClick={handleLike}
+          className={`px-4 py-2 rounded mb-2 transition-colors ${isLiked ? 'bg-red-500 text-white' : 'bg-gray-500 text-white/80'}`}
+        >
+          {isLiked ? '❤' : '🤍'} {likes} likes
+        </button>
 
         <div className="flex flex-col sm:flex-row gap-2">
           <Button size="sm" className="flex-1">
