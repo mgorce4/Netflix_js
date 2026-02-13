@@ -16,7 +16,7 @@ function MovieHero({ movie }) {
       </div>
 
       {/* Content */}
-      <div className="relative container mx-auto px-4 h-full flex items-center">
+      <div className="relative h-full flex items-center pl-4">
         <div className="max-w-2xl">
           {/* Title */}
           <h1 className="text-5xl md:text-7xl font-bold mb-4 drop-shadow-2xl">

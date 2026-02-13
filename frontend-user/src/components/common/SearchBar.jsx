@@ -5,7 +5,6 @@ import { useState } from 'react';
 function SearchBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [lastSearch, setLastSearch] = useState('');
 
     // Gère la modification du champ texte
     const handleChange = (e) => {
@@ -15,7 +14,6 @@ function SearchBar() {
     // Gère la soumission du formulaire
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLastSearch(searchTerm);
         if (searchTerm.trim() !== '') {
             console.log('Recherche :', searchTerm);
         }
@@ -46,10 +44,7 @@ function SearchBar() {
                     </svg>
                 </button>
             )}
-            {/* Affichage du mot recherché test*/}
-            {lastSearch && (
-                <p className="text-gray-300 mt-2 text-sm">Vous cherchez : <span className="font-semibold">{lastSearch}</span></p>
-            )}
+            
         </div>
     );
 }
