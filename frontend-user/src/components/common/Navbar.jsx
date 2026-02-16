@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
+
 function Navbar() {
-  const [isScrolled, _setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
-  // Note : useEffect sera vu au TP 03
-  // Pour l'instant, version statique
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
       isScrolled ? 'bg-black' : 'bg-gradient-to-b from-black/80 to-transparent'
