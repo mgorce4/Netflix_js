@@ -52,6 +52,8 @@ function MovieDescription({ description }) {
   );
 }
 
+import { useCart } from "../../context/CartContext.jsx";
+
 function MovieCard({ movie }) {
   // Like state
   const [isLiked, setIsLiked] = useState(false);
@@ -59,6 +61,15 @@ function MovieCard({ movie }) {
   // Simuler une location
   const [isRented, setIsRented] = useState(false);
   const [expiryDate, setExpiryDate] = useState(null);
+  const { addToCart, cartItems } = useCart();
+
+  // Synchroniser isRented avec le panier
+  useEffect(() => {
+    if (!cartItems.find((item) => item.id === movie.id)) {
+      setIsRented(false);
+      setExpiryDate(null);
+    }
+  }, [cartItems, movie.id]);
 
   // Fonction de gestion du like
   const handleLike = () => {
@@ -78,6 +89,7 @@ function MovieCard({ movie }) {
     const expire = new Date();
     expire.setDate(expire.getDate() + 2);
     setExpiryDate(expire);
+    addToCart(movie);
   };
 
   return (
@@ -138,7 +150,7 @@ function MovieCard({ movie }) {
         )}
 
         <div className="flex flex-col sm:flex-row gap-2">
-          {!isRented ? (
+          {!isRented && !cartItems.find((item) => item.id === movie.id) ? (
             <Button size="sm" className="flex-1" onClick={handleRent}>
               ▶ Louer {movie.price}€
             </Button>

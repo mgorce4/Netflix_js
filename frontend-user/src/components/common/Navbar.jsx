@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import SearchBar from "../movies/SearchBar";
+import CartButton from "./CartButton";
 
 
 function Navbar() {
@@ -61,6 +63,7 @@ function Navbar() {
           {/* Partie droite : searchbar + avatar */}
           <div className="flex items-center space-x-4 justify-end pr-2">
             <SearchBar movies={moviesData} />
+            <CartButton />
             <div
               className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2"
               onClick={() => navigate("/login")}

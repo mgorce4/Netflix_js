@@ -19,15 +19,27 @@ function RentalCountdown({ expiryDate }) {
   );
 }
 
+import { useCart } from "../../context/CartContext.jsx";
+
 function MovieHero({ movie }) {
   const [isRented, setIsRented] = useState(false);
   const [expiryDate, setExpiryDate] = useState(null);
+  const { addToCart, cartItems } = useCart();
+
+  // Synchroniser isRented avec le panier
+  useEffect(() => {
+    if (!cartItems.find((item) => item.id === movie.id)) {
+      setIsRented(false);
+      setExpiryDate(null);
+    }
+  }, [cartItems, movie.id]);
 
   const handleRent = () => {
     setIsRented(true);
     const expire = new Date();
     expire.setDate(expire.getDate() + 2);
     setExpiryDate(expire);
+    addToCart(movie);
   };
 
   return (
@@ -78,7 +90,7 @@ function MovieHero({ movie }) {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
-            {!isRented ? (
+            {!isRented && !cartItems.find((item) => item.id === movie.id) ? (
               <Button size="lg" className="shadow-2xl" onClick={handleRent}>
                 <svg
                   className="w-5 h-5 mr-2"
