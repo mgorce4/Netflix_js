@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 function Navbar() {
   const [isScrolled, _setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   // Note : useEffect sera vu au TP 03
   // Pour l'instant, version statique
@@ -37,7 +39,11 @@ function Navbar() {
           {/* Partie droite : searchbar + avatar */}
           <div className="flex items-center space-x-4 justify-end pr-2">
             <SearchBar/>
-            <div className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2">
+            <div
+              className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2"
+              onClick={() => navigate('/login')}
+              title="Se connecter"
+            >
               <span className="text-sm font-bold">U</span>
             </div>
           </div>
