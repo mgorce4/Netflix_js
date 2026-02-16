@@ -24,7 +24,10 @@ function Footer() {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link}>
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-white transition-colors text-sm"
+                    >
                       {link}
                     </a>
                   </li>
@@ -50,7 +53,9 @@ function Footer() {
 
         {/* Copyright */}
         <div className="text-center text-gray-500 text-sm">
-          <p>© 2026 Netfilm Clone - Projet pédagogique IUT Informatique - Limoges</p>
+          <p>
+            © 2026 Netfilm Clone - Projet pédagogique IUT Informatique - Limoges
+          </p>
         </div>
       </div>
     </footer>
