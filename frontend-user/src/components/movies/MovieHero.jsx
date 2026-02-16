@@ -1,6 +1,33 @@
+import { useState, useEffect } from 'react';
 import Button from '../common/Button';
 
+function RentalCountdown({ expiryDate }) {
+  const [timeLeft, setTimeLeft] = useState('');
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const diff = new Date(expiryDate) - new Date();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      setTimeLeft(`${days}j ${hours}h`);
+    };
+    calculateTimeLeft();
+    const interval = setInterval(calculateTimeLeft, 60000);
+    return () => clearInterval(interval);
+  }, [expiryDate]);
+  return <span className="text-xs text-orange-400">Expire dans: {timeLeft}</span>;
+}
+
 function MovieHero({ movie }) {
+  const [isRented, setIsRented] = useState(false);
+  const [expiryDate, setExpiryDate] = useState(null);
+
+  const handleRent = () => {
+    setIsRented(true);
+    const expire = new Date();
+    expire.setDate(expire.getDate() + 2);
+    setExpiryDate(expire);
+  };
+
   return (
     <div className="relative h-[80vh] w-full">
       {/* Background Image */}
@@ -40,14 +67,27 @@ function MovieHero({ movie }) {
             {movie.description}
           </p>
 
+          {/* Affichage du compte à rebours si loué */}
+          {isRented && expiryDate && (
+            <div className="mb-4">
+              <RentalCountdown expiryDate={expiryDate} />
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="shadow-2xl">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-              </svg>
-              Louer pour {movie.price}€
-            </Button>
+            {!isRented ? (
+              <Button size="lg" className="shadow-2xl" onClick={handleRent}>
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+                Louer pour {movie.price}€
+              </Button>
+            ) : (
+              <Button size="lg" className="shadow-2xl" disabled>
+                Loué
+              </Button>
+            )}
             <Button variant="secondary" size="lg">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
