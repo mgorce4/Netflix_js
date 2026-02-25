@@ -1,4 +1,5 @@
 import Button from "../common/Button";
+import { useNavigate } from "react-router-dom";
 
 // Couleurs par genre
 const genreColors = {
@@ -35,7 +36,8 @@ function MovieDescription({ description }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Fonction pour basculer l'état
-  const toggleDescription = () => {
+  const toggleDescription = (e) => {
+    e.stopPropagation(); // Empêcher la navigation
     setIsExpanded((prev) => !prev);
   };
 
@@ -55,6 +57,7 @@ function MovieDescription({ description }) {
 import { useCart } from "../../context/CartContext.jsx";
 
 function MovieCard({ movie }) {
+  const navigate = useNavigate();
   // Like state
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(movie.likes || 0);
@@ -72,7 +75,8 @@ function MovieCard({ movie }) {
   }, [cartItems, movie.id]);
 
   // Fonction de gestion du like
-  const handleLike = () => {
+  const handleLike = (e) => {
+    e.stopPropagation(); // Empêcher la navigation
     if (isLiked) {
       setIsLiked(false);
       setLikes((prev) => prev - 1);
@@ -83,7 +87,8 @@ function MovieCard({ movie }) {
   };
 
   // Fonction de location
-  const handleRent = () => {
+  const handleRent = (e) => {
+    e.stopPropagation(); // Empêcher la navigation
     setIsRented(true);
     // Expire dans 2 jours
     const expire = new Date();
@@ -92,8 +97,22 @@ function MovieCard({ movie }) {
     addToCart(movie);
   };
 
+  // Navigation vers la page de détail
+  const handleCardClick = () => {
+    navigate(`/movie/${movie.id}`);
+  };
+
+  // Handler pour le bouton Info (même action que clic sur la carte)
+  const handleInfo = (e) => {
+    e.stopPropagation();
+    navigate(`/movie/${movie.id}`);
+  };
+
   return (
-    <div className="group relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105">
+    <div 
+      className="group relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+      onClick={handleCardClick}
+    >
       {/* Image principale */}
       <div className="relative aspect-[2/3]">
         <img
@@ -155,11 +174,16 @@ function MovieCard({ movie }) {
               ▶ Louer {movie.price}€
             </Button>
           ) : (
-            <Button size="sm" className="flex-1" disabled>
+            <Button 
+              size="sm" 
+              className="flex-1" 
+              disabled
+              onClick={(e) => e.stopPropagation()}
+            >
               Loué
             </Button>
           )}
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button variant="outline" size="sm" className="flex-1" onClick={handleInfo}>
             + Info
           </Button>
         </div>
