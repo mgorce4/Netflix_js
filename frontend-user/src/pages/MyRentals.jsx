@@ -26,10 +26,17 @@ function MyRentals() {
             <div className="mb-8 flex items-center justify-center">
               {/* Pellicule de film SVG */}
               <svg width="80" height="80" viewBox="0 0 64 64" fill="none">
-                <rect x="8" y="16" width="48" height="32" rx="6" fill="#18181b" stroke="#e11d48" strokeWidth="3" />
-                <circle cx="16" cy="32" r="4" fill="#e11d48" />
+                <circle cx="32" cy="32" r="28" stroke="#e11d48" strokeWidth="4" fill="#18181b" />
+                <circle cx="32" cy="32" r="16" stroke="#e11d48" strokeWidth="2" fill="#111" />
                 <circle cx="32" cy="32" r="4" fill="#e11d48" />
-                <circle cx="48" cy="32" r="4" fill="#e11d48" />
+                <circle cx="32" cy="12" r="3" fill="#e11d48" />
+                <circle cx="32" cy="52" r="3" fill="#e11d48" />
+                <circle cx="12" cy="32" r="3" fill="#e11d48" />
+                <circle cx="52" cy="32" r="3" fill="#e11d48" />
+                <circle cx="20" cy="20" r="2" fill="#e11d48" />
+                <circle cx="44" cy="20" r="2" fill="#e11d48" />
+                <circle cx="20" cy="44" r="2" fill="#e11d48" />
+                <circle cx="44" cy="44" r="2" fill="#e11d48" />
               </svg>
             </div>
             <div className="text-lg mb-6 text-gray-300">Aucune location pour le moment</div>

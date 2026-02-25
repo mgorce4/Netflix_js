@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar({ movies, onSearch }) {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +26,18 @@ function SearchBar({ movies, onSearch }) {
   }, [searchTerm, movies]);
 
   const handleSelect = (movie) => {
-    setSearchTerm(movie.title);
+    setSearchTerm("");
     setIsOpen(false);
-    if (onSearch) onSearch(movie);
-    console.log("Film sélectionné :", movie);
+    navigate(`/movie/${movie.id}`);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+    if (searchTerm.trim().length > 0) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    } else {
+      navigate(`/search`);
+    }
   };
 
   const handleFocus = () => {
@@ -37,7 +47,7 @@ function SearchBar({ movies, onSearch }) {
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <form className="relative w-full max-w-md" onSubmit={handleSubmit} autoComplete="off">
       <div className="relative">
         <input
           ref={inputRef}
@@ -92,7 +102,7 @@ function SearchBar({ movies, onSearch }) {
           )}
         </div>
       )}
-    </div>
+    </form>
   );
 }
 

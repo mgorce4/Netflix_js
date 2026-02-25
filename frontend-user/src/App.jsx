@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/utils/ProtectedRoute';
+import Search from './pages/Search';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/movie/:id" element={<MovieDetail />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/search" element={<Search />} />
 
       {/* Routes protégées */}
       <Route
