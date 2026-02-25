@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
 
 function RentalCountdown({ expiryDate }) {
@@ -22,6 +23,7 @@ function RentalCountdown({ expiryDate }) {
 import { useCart } from "../../context/CartContext.jsx";
 
 function MovieHero({ movie }) {
+  const navigate = useNavigate();
   const [isRented, setIsRented] = useState(false);
   const [expiryDate, setExpiryDate] = useState(null);
   const { addToCart, cartItems } = useCart();
@@ -40,6 +42,10 @@ function MovieHero({ movie }) {
     expire.setDate(expire.getDate() + 2);
     setExpiryDate(expire);
     addToCart(movie);
+  };
+
+  const handleMoreInfo = () => {
+    navigate(`/movie/${movie.id}`);
   };
 
   return (
@@ -106,7 +112,7 @@ function MovieHero({ movie }) {
                 Loué
               </Button>
             )}
-            <Button variant="secondary" size="lg">
+            <Button variant="secondary" size="lg" onClick={handleMoreInfo}>
               <svg
                 className="w-5 h-5 mr-2"
                 fill="none"
