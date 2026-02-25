@@ -95,6 +95,13 @@ function MovieCard({ movie }) {
     expire.setDate(expire.getDate() + 2);
     setExpiryDate(expire);
     addToCart(movie);
+    // Ajout dans localStorage (clé rentals)
+    const rentals = JSON.parse(localStorage.getItem("rentals") || "[]");
+    // On évite les doublons
+    if (!rentals.find((m) => m.id === movie.id)) {
+      rentals.push({ ...movie, expiryDate: expire.toLocaleDateString() });
+      localStorage.setItem("rentals", JSON.stringify(rentals));
+    }
   };
 
   // Navigation vers la page de détail

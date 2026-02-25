@@ -1,15 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
-
 import SearchBar from "../movies/SearchBar";
 import CartButton from "./CartButton";
-
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [moviesData, setMoviesData] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +16,15 @@ function Navbar() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  // Vérifier l'authentification à chaque rendu
+  useEffect(() => {
+    setIsAuthenticated(!!localStorage.getItem("user"));
+    // Optionnel : écouter le storage pour logout multi-tab
+    const onStorage = () => setIsAuthenticated(!!localStorage.getItem("user"));
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   // Charger les films depuis l'API backend
@@ -66,17 +73,28 @@ function Navbar() {
               </li>
             </ul>
           </div>
-          {/* Partie droite : searchbar + avatar */}
+          {/* Partie droite : searchbar + avatar ou bouton connexion */}
           <div className="flex items-center space-x-4 justify-end pr-2">
             <SearchBar movies={moviesData} />
-            <CartButton />
-            <div
-              className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2"
-              onClick={() => navigate("/login")}
-              title="Se connecter"
-            >
-              <span className="text-sm font-bold">U</span>
-            </div>
+            {isAuthenticated ? (
+              <>
+                <CartButton />
+                <div
+                  className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2"
+                  onClick={() => navigate("/login")}
+                  title="Se connecter"
+                >
+                  <span className="text-sm font-bold">U</span>
+                </div>
+              </>
+            ) : (
+              <button
+                className="bg-primary text-white font-bold px-4 py-2 rounded hover:bg-primary-dark transition-colors"
+                onClick={() => navigate("/login")}
+              >
+                Connexion
+              </button>
+            )}
           </div>
         </div>
       </div>

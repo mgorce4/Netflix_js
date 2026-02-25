@@ -42,6 +42,12 @@ function MovieHero({ movie }) {
     expire.setDate(expire.getDate() + 2);
     setExpiryDate(expire);
     addToCart(movie);
+    // Ajout dans localStorage (clé rentals)
+    const rentals = JSON.parse(localStorage.getItem("rentals") || "[]");
+    if (!rentals.find((m) => m.id === movie.id)) {
+      rentals.push({ ...movie, expiryDate: expire.toLocaleDateString() });
+      localStorage.setItem("rentals", JSON.stringify(rentals));
+    }
   };
 
   const handleMoreInfo = () => {
