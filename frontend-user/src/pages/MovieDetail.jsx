@@ -4,6 +4,7 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/layout/Footer';
 import Button from '../components/common/Button';
 import { useCart } from '../context/CartContext';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 function MovieDetail() {
   const { id } = useParams();
@@ -12,7 +13,6 @@ function MovieDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { addToCart, cartItems } = useCart();
-  const [isRented, setIsRented] = useState(false);
 
   useEffect(() => {
     // Charger tous les films depuis l'API et trouver celui correspondant à l'ID
@@ -40,23 +40,17 @@ function MovieDetail() {
       });
   }, [id]);
 
-  // Vérifier si le film est déjà loué
-  useEffect(() => {
-    if (movie && cartItems.find((item) => item.id === movie.id)) {
-      setIsRented(true);
-    }
-  }, [movie, cartItems]);
+
+  // Déterminer si le film est déjà loué
+  const isRented = movie && cartItems.some((item) => item.id === movie.id);
 
   const handleRent = () => {
     if (movie) {
       addToCart(movie);
-      setIsRented(true);
     }
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+
 
   const handleBackHome = () => {
     navigate('/');
@@ -95,7 +89,18 @@ function MovieDetail() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-
+      {/* Fil d'Ariane sous la navbar, sans espace */}
+      <div className="w-full bg-black pt-16">
+        <div className="container mx-auto px-4 md:px-12">
+          <Breadcrumb
+            items={[
+              { label: 'Films', path: '/' },
+              { label: movie.genre, path: `/?genre=${movie.genre}` },
+              { label: movie.title }
+            ]}
+          />
+        </div>
+      </div>
       {/* Hero Section avec image de fond */}
       <div className="relative h-[70vh] w-full">
         {/* Image de fond */}
@@ -106,33 +111,12 @@ function MovieDetail() {
             className="w-full h-full object-cover"
           />
           {/* Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-black via-black/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent"></div>
         </div>
 
         {/* Contenu */}
-        <div className="relative h-full flex flex-col justify-between px-4 md:px-12 pt-24 pb-12">
-          {/* Bouton retour en haut */}
-          <button
-            onClick={handleBack}
-            className="flex items-center space-x-2 text-white hover:text-primary transition-colors self-start"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span className="text-lg font-semibold">Retour</span>
-          </button>
-
+        <div className="relative h-full flex flex-col justify-end px-4 md:px-12 pt-0 pb-12">
           {/* Titre et informations en bas */}
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-bold mb-4 drop-shadow-2xl">
