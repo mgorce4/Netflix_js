@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import SearchBar from "../movies/SearchBar";
 import CartButton from "./CartButton";
@@ -39,24 +40,29 @@ function Navbar() {
         <div className="flex items-center justify-between">
           {/* Partie gauche : logo + liens */}
           <div className="flex items-center space-x-8 flex-1 min-w-0">
-            <h1 className="text-primary text-3xl font-bold tracking-tight whitespace-nowrap">
+            <Link to="/" className="text-primary text-3xl font-bold tracking-tight whitespace-nowrap">
               NETFILM
-            </h1>
+            </Link>
             <ul className="hidden md:flex space-x-6">
               <li>
-                <a href="#" className="hover:text-gray-300 transition-colors">
+                <NavLink 
+                  to="/" 
+                  className={({ isActive }) => 
+                    isActive ? 'text-primary font-bold' : 'text-gray-300 hover:text-white transition-colors'
+                  }
+                >
                   Accueil
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#" className="hover:text-gray-300 transition-colors">
-                  Films
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-gray-300 transition-colors">
+                <NavLink 
+                  to="/my-rentals" 
+                  className={({ isActive }) => 
+                    isActive ? 'text-primary font-bold' : 'text-gray-300 hover:text-white transition-colors'
+                  }
+                >
                   Mes locations
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
