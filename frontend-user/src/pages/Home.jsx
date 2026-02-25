@@ -31,7 +31,14 @@ function Home() {
   }, []);
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-primary mx-auto mb-6"></div>
+          <p className="text-xl text-white font-semibold">Chargement...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!Array.isArray(movies) || movies.length === 0) {
