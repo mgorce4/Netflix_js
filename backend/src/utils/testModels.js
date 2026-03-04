@@ -76,6 +76,14 @@ const testModels = async () => {
  } catch (error) {
 	 console.log('✅ Validation échouée comme prévu:', error.message);
  }
+ // Test 7: Méthodes statiques Movie
+ console.log('\nTest 7: Méthodes statiques Movie');
+ const sciFiMovies = await Movie.getByGenre("Science-Fiction");
+ console.log("Films Sci-Fi:", sciFiMovies.length);
+ const affordableMovies = await Movie.getByPriceRange(0, 4);
+ console.log("Films à moins de 4€:", affordableMovies.length);
+ const stats = await Movie.getStatsByGenre();
+ console.log("Statistiques par genre:", stats);
  // Nettoyage
  console.log('\n🧹 Nettoyage...');
  await User.deleteOne({ _id: testUser._id });
