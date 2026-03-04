@@ -33,28 +33,36 @@ const movieSchema = new mongoose.Schema(
  },
  },
  genre: {
- type: [String],
- required: [true, "Le genre est requis"],
- validate: {
- validator: function (v) {
- return v && v.length > 0;
- },
- message: "La liste des genres ne peut pas être vide.",
- },
- enum: {
- values: [
- "Action",
- "Comédie",
- "Drame",
- "Science-Fiction",
- "Horreur",
- "Thriller",
- "Romance",
- "Animation",
- "Documentaire",
- ],
- message: "{VALUE} n'est pas un genre valide",
- },
+	 type: [String],
+	 required: [true, "Le genre est requis"],
+	 validate: [
+		 {
+			 validator: function (v) {
+				 return v && v.length > 0;
+			 },
+			 message: "La liste des genres ne peut pas être vide."
+		 },
+		 {
+			 validator: function (v) {
+				 return Array.isArray(v) && v.length <= 5;
+			 },
+			 message: "Un film ne peut pas avoir plus de 5 genres."
+		 }
+	 ],
+	 enum: {
+		 values: [
+			 "Action",
+			 "Comédie",
+			 "Drame",
+			 "Science-Fiction",
+			 "Horreur",
+			 "Thriller",
+			 "Romance",
+			 "Animation",
+			 "Documentaire",
+		 ],
+		 message: "{VALUE} n'est pas un genre valide",
+	 },
  },
  year: {
  type: Number,
@@ -78,17 +86,26 @@ const movieSchema = new mongoose.Schema(
 },
  },
  price: {
- type: Number,
- required: [true, "Le prix est requis"],
- min: [0, "Le prix doit être positif"],
- default: 3.99,
- validate: {
- validator: function (v) {
- // Le prix doit avoir maximum 2 décimales
- return /^\d+(\.\d{1,2})?$/.test(v.toString());
- },
- message: "Le prix doit avoir au maximum 2 décimales",
- },
+	 type: Number,
+	 required: [true, "Le prix est requis"],
+	 min: [0, "Le prix doit être positif"],
+	 default: 3.99,
+	 validate: [
+		 {
+			 validator: function (v) {
+				 // Le prix doit avoir au moins 2 décimales
+				 return /^\d+\.\d{2}$/.test(v.toFixed(2));
+			 },
+			 message: "Le prix doit avoir au moins 2 décimales"
+		 },
+		 {
+			 validator: function (v) {
+				 // Le prix doit avoir au maximum 2 décimales
+				 return /^\d+(\.\d{1,2})?$/.test(v.toString());
+			 },
+			 message: "Le prix doit avoir au maximum 2 décimales"
+		 }
+	 ]
  },
  rating: {
  type: Number,
