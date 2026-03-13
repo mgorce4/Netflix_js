@@ -15,8 +15,8 @@ export const getAllMovies = async (req, res, next) => {
                 { description: { $regex: search, $options: 'i' } }
             ];
         }
-        // Filtre genre
-        if (genre) filter.genre = genre;
+        // Filtre genre (array)
+        if (genre) filter.genre = { $in: [genre] };
         // Filtre année
         if (year) filter.year = Number(year);
         // Pagination
@@ -50,6 +50,7 @@ export const getMovieById = async (req, res, next) => {
 //@route POST /api/movies
 //@access Private/Admin
 export const createMovie = async (req, res, next) => {
+    const { title, description, poster, backdrop, genre, year, duration, price, rating } = req.body;
     const movie = await Movie.create({
         title,
         description,
@@ -61,12 +62,14 @@ export const createMovie = async (req, res, next) => {
         price,
         rating
     });
+    res.status(201).json(movie);
 };
 
 //@desc Modifier un film
 //@route PUT /api/movies/:id
 //@access Private/Admin
 export const updateMovie = async (req, res, next) => {
+
     const updatedMovie = await Movie.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -75,12 +78,21 @@ export const updateMovie = async (req, res, next) => {
         runValidators: true // Exécuter les validations
     }
     );
+    if (!updatedMovie) {
+        return res.status(404).json({ message: 'Movie not found' });
+    }
+    res.json(updatedMovie);
+    
 };
 
 //@desc Supprimer un film
 //@route DELETE /api/movies/:id
 //@access Private/Admin
 export const deleteMovie = async (req, res, next) => {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+        return res.status(404).json({ message: 'Movie not found' });
+    }
     await movie.deleteOne();
 };
 
@@ -88,25 +100,40 @@ export const deleteMovie = async (req, res, next) => {
 //@route GET /api/movies/stats
 //@access Private/Admin
 export const getMovieStats = async (req, res, next) => {
-    const totalRevenue = await Movie.aggregate([
-    {
-        $group: {
-            _id: null,
-            total: { $sum: { $multiply: ['$price', '$rentalCount'] } }
-        }
+    try {
+        const stats = await Movie.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: { $multiply: ['$price', '$rentalCount'] } },
+                    totalMovies: { $sum: 1 },
+                    avgRating: { $avg: '$rating' }
+                }
+            }
+        ]);
+        res.json(stats[0] || {});
+    } catch (error) {
+        next(error);
     }
-    ]);
 };
 
 //@desc Obtenir des films similaires
 //@route GET /api/movies/:id/similar
 //@access Public
 export const getSimilarMovies = async (req, res, next) => {
-    const similarMovies = await Movie.find({
-        genre: { $in: movie.genre },
-        _id: { $ne: movie._id }, // Exclure le film actuel
-        isAvailable: true
-    })
-    .sort({ rating: -1 })
-    .limit(6);
-}
+    try {
+        const movie = await Movie.findById(req.params.id);
+        if (!movie) {
+            return res.status(404).json({ message: 'Film non trouvé' });
+        }
+        const similarMovies = await Movie.find({
+            genre: { $in: movie.genre },
+            _id: { $ne: movie._id }
+        })
+        .sort({ rating: -1 })
+        .limit(6);
+        res.json(similarMovies);
+    } catch (error) {
+        next(error);
+    }
+};
