@@ -1,24 +1,50 @@
+import { title } from 'process';
 import Movie from '../models/Movie.js';
 
 //@desc Obtenir tous les films
 //@route GET /api/movies
 //@access Public
 export const getAllMovies = async (req, res, next) => {
-    const skip = (page - 1) * limit;
-    // Exécution de la requête
-    const movies = await Movie.find(query)
-    .sort(sortOption)
-    .skip(skip)
-    .limit(parseInt(limit));
-    // Comptage total pour la pagination
-    const total = await Movie.countDocuments(query)
+    try {
+        const { search, genre, year, sort, page = 1, limit = 10 } = req.query;
+        let filter = {};
+        // Recherche sur titre ou description
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+        // Filtre genre
+        if (genre) filter.genre = genre;
+        // Filtre année
+        if (year) filter.year = Number(year);
+        // Pagination
+        const skip = (Number(page) - 1) * Number(limit);
+        // Construction de la requête
+        let moviesQuery = Movie.find(filter);
+        // Tri
+        if (sort) moviesQuery = moviesQuery.sort({ [sort]: -1 });
+        moviesQuery = moviesQuery.skip(skip).limit(Number(limit));
+        // Exécution
+        const movies = await moviesQuery;
+        const total = await Movie.countDocuments(filter);
+        res.json({ movies, total });
+    } catch (error) {
+        next(error);
+    }
 };
+
 
 //@desc Obtenir un film par ID
 //@route GET /api/movies/:id
 //@access Public
 export const getMovieById = async (req, res, next) => {
     const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+        return res.status(404).json({ message: 'Movie not found' });
+    }
+    res.json(movie);
 };
 //@desc Créer un nouveau film
 //@route POST /api/movies
