@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 // Charger les variables d'environnement
 dotenv.config();
 // Initialiser Express
+// Importer de la route
+import movieRoutes from './routes/movie.routes.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 // Connecter à MongoDB
@@ -25,6 +27,8 @@ if (process.env.NODE_ENV === 'development') {
  });
 }
 // Routes de test
+// Utilisation de la Routes API
+app.use('/api/movies', movieRoutes);
 app.get('/', (req, res) => {
  res.json({
  message: 'Netflix API',
