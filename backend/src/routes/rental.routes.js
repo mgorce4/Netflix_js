@@ -4,7 +4,8 @@ import {
   getAllRentals,
   getMyRentals,
   cancelRental,
-  getRentalStats
+  getRentalStats,
+  getRecommendations
 } from '../controllers/rental.controller.js';
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.get('/', getAllRentals);
 router.get('/myrentals', getMyRentals);
 // Statistiques
 router.get('/stats', getRentalStats);
+// Recommandations personnalisées
+router.get('/recommendations', getRecommendations);
 // Créer une location
 router.post('/', createRental);
 // Annuler une location
