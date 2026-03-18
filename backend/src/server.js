@@ -8,6 +8,7 @@ dotenv.config();
 // Initialiser Express
 // Importer de la route
 import movieRoutes from './routes/movie.routes.js';
+import rentalRoutes from './routes/rental.routes.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 // Connecter à MongoDB
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 // Routes de test
 // Utilisation de la Routes API
 app.use('/api/movies', movieRoutes);
+app.use('/api/rentals', rentalRoutes);
 app.get('/', (req, res) => {
  res.json({
  message: 'Netflix API',
@@ -41,6 +43,7 @@ app.get('/', (req, res) => {
  }
  });
 });
+
 app.get('/api/health', (req, res) => {
  res.json({
  status: 'OK',
