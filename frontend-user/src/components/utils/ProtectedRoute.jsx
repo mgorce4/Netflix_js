@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 function ProtectedRoute({ children }) {
-  // Pour l'instant, on simule avec localStorage
-  // plus tard on utilisera Context API
-  const isAuthenticated = localStorage.getItem('user') !== null;
-  if (!isAuthenticated) {
+  const { isAuthenticated } = useContext(AuthContext);
+  if (!isAuthenticated()) {
     // Rediriger vers la page de connexion
     return <Navigate to="/login" replace />;
   }

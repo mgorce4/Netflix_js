@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
 import SearchBar from "../movies/SearchBar";
 import CartButton from "./CartButton";
+import { AuthContext } from "../../context/AuthContext";
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [moviesData, setMoviesData] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -19,13 +21,7 @@ function Navbar() {
   }, []);
 
   // Vérifier l'authentification à chaque rendu
-  useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("user"));
-    // Optionnel : écouter le storage pour logout multi-tab
-    const onStorage = () => setIsAuthenticated(!!localStorage.getItem("user"));
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  // Plus besoin de gérer localStorage ici, le contexte s'en occupe
 
   // Charger les films depuis l'API backend
   useEffect(() => {
@@ -35,68 +31,77 @@ function Navbar() {
       .catch((err) => console.error("Erreur chargement films:", err));
   }, []);
 
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+    navigate("/");
+  };
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
         isScrolled
           ? "bg-black"
-          : "bg-gradient-to-b from-black/80 to-transparent"
+          : "bg-linear-to-b from-black/80 to-transparent"
       }`}
     >
-      <div className="py-4 px-4">
-        <div className="flex items-center justify-between">
-          {/* Partie gauche : logo + liens */}
-          <div className="flex items-center space-x-8 flex-1 min-w-0">
-            <Link to="/" className="text-primary text-3xl font-bold tracking-tight whitespace-nowrap">
-              NETFILM
-            </Link>
-            <ul className="hidden md:flex space-x-6">
-              <li>
-                <NavLink 
-                  to="/" 
-                  className={({ isActive }) => 
-                    isActive ? 'text-primary font-bold' : 'text-gray-300 hover:text-white transition-colors'
-                  }
-                >
-                  Accueil
+      <div className="flex items-center space-x-4">
+        {/* <SearchBar movies={movies} onSearch={onSearch} /> */}
+        <button className="hover:text-gray-300 transition-colors">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
+        {isAuthenticated() ? (
+          <div className="relative">
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center space-x-2"
+            >
+              <img
+                src={user.avatar}
+                alt={user.name} className="w-8 h-8 rounded cursor-pointer hover:ring-2 hover:ring-primary transition"
+              />
+              <span className="hidden md:block text-sm">{user.name}</span>
+            </button>
+            {showUserMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-black/95 backdrop-blur-lg border border-gray-800 rounded-lg shadow-xl py-2">
+                <NavLink
+                  to="/profile" className="block px-4 py-2 hover:bg-gray-800 transition"
+                  onClick={() => setShowUserMenu(false)}>
+                  Mon profil
                 </NavLink>
-              </li>
-              <li>
-                <NavLink 
-                  to="/my-rentals" 
-                  className={({ isActive }) => 
-                    isActive ? 'text-primary font-bold' : 'text-gray-300 hover:text-white transition-colors'
-                  }
-                >
+                <NavLink
+                  to="/my-rentals"
+                  className="block px-4 py-2 hover:bg-gray-800 transition"
+                  onClick={() => setShowUserMenu(false)}>
                   Mes locations
                 </NavLink>
-              </li>
-            </ul>
-          </div>
-          {/* Partie droite : searchbar + avatar ou bouton connexion */}
-          <div className="flex items-center space-x-4 justify-end pr-2">
-            <SearchBar movies={moviesData} />
-            {isAuthenticated ? (
-              <>
-                <CartButton />
-                <div
-                  className="w-8 h-8 bg-primary rounded flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors mr-2"
-                  onClick={() => navigate("/login")}
-                  title="Se connecter"
-                >
-                  <span className="text-sm font-bold">U</span>
-                </div>
-              </>
-            ) : (
-              <button
-                className="bg-primary text-white font-bold px-4 py-2 rounded hover:bg-primary-dark transition-colors"
-                onClick={() => navigate("/login")}
-              >
-                Connexion
-              </button>
+                <hr className="border-gray-800 my-2" />
+                <button
+                  onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-800 transition text-red-400">
+                  Déconnexion
+                </button>
+              </div>
             )}
           </div>
-        </div>
+        ) : (
+          <Link to="/login">
+            <button className="px-4 py-2 bg-primary hover:bg-primary-dark rounded transition">
+              Connexion
+            </button>
+          </Link>
+        )}
       </div>
     </nav>
   );

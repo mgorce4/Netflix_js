@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-const AuthContext = createContext();
+export const AuthContext = createContext();
 export function AuthProvider({ children }) {
     // Charger l'utilisateur depuis localStorage au démarrage
     const [user, setUser] = useState(() => {
