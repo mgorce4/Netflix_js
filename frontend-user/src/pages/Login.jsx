@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const validateForm = () => {
     const newErrors = {};
@@ -28,14 +32,14 @@ function LoginForm() {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ email: formData.email, name: formData.email.split("@")[0] })
-      );
-      setLoading(false);
+    // Utilisation du contexte Auth
+    const result = await login(formData.email, formData.password);
+    if (result.success) {
       navigate("/");
-    }, 1000);
+    } else {
+      setApiError(result.error || "Erreur de connexion");
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,6 +50,7 @@ function LoginForm() {
         className="bg-black border border-gray-700 rounded-lg p-8 w-full max-w-md flex flex-col gap-5 shadow-lg"
       >
         <h2 className="text-2xl font-bold text-white mb-4">Se connecter</h2>
+        {apiError && <div className="text-red-500 text-sm mb-2">{apiError}</div>}
         <div>
           <input
             name="email"

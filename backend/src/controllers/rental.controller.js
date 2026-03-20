@@ -1,4 +1,4 @@
-import Rental from '../models/rental.model.js';
+import Rental from '../models/Rental.js';
 import Movie from '../models/Movie.js';
 import User from '../models/User.js';
 
