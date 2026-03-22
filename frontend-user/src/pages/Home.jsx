@@ -18,8 +18,9 @@ function Home() {
       try {
         const res = await fetch("/api/movies");
         const data = await res.json();
-        setMovies(data);
-        setFilteredMovies(data);
+        const moviesArray = Array.isArray(data) ? data : data.movies || [];
+        setMovies(moviesArray);
+        setFilteredMovies(moviesArray);
       } catch (err) {
         console.error("Erreur chargement films:", err);
         setMovies([]);
@@ -62,12 +63,19 @@ function Home() {
     return shuffled.slice(0, count);
   };
   const popularMovies = getRandomMovies(movies, 5);
-  // 5 science-fiction movies
-  const sciFiMovies = movies
-    .filter((movie) => movie.genre === "Science-Fiction")
-    .slice(0, 5);
-  // Recent movies (after 2010)
-  const recentMovies = movies.filter((movie) => movie.year > 2010);
+  // Science-fiction movies (gère les films multi-genres)
+  const sciFiMovies = movies.filter((movie) => {
+    const genres = Array.isArray(movie.genre)
+      ? movie.genre
+      : movie.genre
+      ? [movie.genre]
+      : [];
+    return genres.some(
+      (g) => g && g.trim().toLowerCase() === "science-fiction"
+    );
+  });
+  // Recent movies (2010 et après)
+  const recentMovies = movies.filter((movie) => movie.year >= 2010);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">

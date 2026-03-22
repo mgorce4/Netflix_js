@@ -64,15 +64,15 @@ function MovieCard({ movie }) {
   // Simuler une location
   const [isRented, setIsRented] = useState(false);
   const [expiryDate, setExpiryDate] = useState(null);
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, cart } = useCart();
 
   // Synchroniser isRented avec le panier
   useEffect(() => {
-    if (!cartItems.find((item) => item.id === movie.id)) {
+    if (!cart.find((item) => item.id === movie.id)) {
       setIsRented(false);
       setExpiryDate(null);
     }
-  }, [cartItems, movie.id]);
+  }, [cart, movie.id]);
 
   // Fonction de gestion du like
   const handleLike = (e) => {
@@ -176,7 +176,7 @@ function MovieCard({ movie }) {
         )}
 
         <div className="flex flex-col sm:flex-row gap-2">
-          {!isRented && !cartItems.find((item) => item.id === movie.id) ? (
+          {!isRented && !cart.find((item) => item.id === movie.id) ? (
             <Button size="sm" className="flex-1" onClick={handleRent}>
               ▶ Louer {movie.price}€
             </Button>

@@ -26,15 +26,15 @@ function MovieHero({ movie }) {
   const navigate = useNavigate();
   const [isRented, setIsRented] = useState(false);
   const [expiryDate, setExpiryDate] = useState(null);
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, cart } = useCart();
 
   // Synchroniser isRented avec le panier
   useEffect(() => {
-    if (!cartItems.find((item) => item.id === movie.id)) {
+    if (!cart.find((item) => item.id === movie.id)) {
       setIsRented(false);
       setExpiryDate(null);
     }
-  }, [cartItems, movie.id]);
+  }, [cart, movie.id]);
 
   const handleRent = () => {
     setIsRented(true);
@@ -102,7 +102,7 @@ function MovieHero({ movie }) {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4">
-            {!isRented && !cartItems.find((item) => item.id === movie.id) ? (
+            {!isRented && !cart.find((item) => item.id === movie.id) ? (
               <Button size="lg" className="shadow-2xl" onClick={handleRent}>
                 <svg
                   className="w-5 h-5 mr-2"

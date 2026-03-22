@@ -12,7 +12,7 @@ function MovieDetail() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { addToCart, cartItems } = useCart();
+  const { addToCart, rentMovie, isRented, isInCart } = useCart();
 
   useEffect(() => {
     // Charger tous les films depuis l'API et trouver celui correspondant à l'ID
@@ -24,8 +24,9 @@ function MovieDetail() {
         return res.json();
       })
       .then((data) => {
+        const moviesArray = Array.isArray(data) ? data : data.movies || [];
         // Trouver le film avec l'ID correspondant
-        const foundMovie = data.find((m) => m.id === parseInt(id));
+        const foundMovie = moviesArray.find((m) => m.id === parseInt(id));
         if (foundMovie) {
           setMovie(foundMovie);
         } else {
@@ -40,16 +41,20 @@ function MovieDetail() {
       });
   }, [id]);
 
+  const alreadyRented = movie ? isRented(movie.id) : false;
+  const inCart = movie ? isInCart(movie.id) : false;
 
-  // Déterminer si le film est déjà loué
-  const isRented = movie && cartItems.some((item) => item.id === movie.id);
-
-  const handleRent = () => {
-    if (movie) {
+  const handleAddToCart = () => {
+    if (movie && !inCart && !alreadyRented) {
       addToCart(movie);
     }
   };
 
+  const handleRentNow = () => {
+    if (movie && !alreadyRented) {
+      rentMovie(movie);
+    }
+  };
 
 
   const handleBackHome = () => {
@@ -148,24 +153,37 @@ function MovieDetail() {
               {movie.description}
             </p>
 
-            {/* Bouton de location */}
-            <div className="mb-8">
-              {!isRented ? (
-                <Button size="lg" onClick={handleRent}>
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                  </svg>
-                  Louer pour {movie.price}€
-                </Button>
-              ) : (
-                <Button size="lg" disabled>
-                  Loué
-                </Button>
-              )}
+            {/* Actions panier / location */}
+            <div className="mb-8 flex flex-col sm:flex-row gap-3">
+              <Button
+                size="lg"
+                onClick={handleRentNow}
+                disabled={alreadyRented}
+                className="flex-1"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+                {alreadyRented ? 'Déjà loué' : `Louer maintenant pour ${movie.price}€`}
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleAddToCart}
+                disabled={inCart || alreadyRented}
+                className="flex-1"
+              >
+                {alreadyRented
+                  ? 'Déjà loué'
+                  : inCart
+                  ? 'Déjà dans le panier'
+                  : 'Ajouter au panier'}
+              </Button>
             </div>
 
             {/* Informations supplémentaires */}

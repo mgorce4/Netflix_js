@@ -36,7 +36,8 @@ export default function Search() {
     fetch("/api/movies")
       .then((res) => res.json())
       .then((data) => {
-        setMovies(data);
+        const moviesArray = Array.isArray(data) ? data : data.movies || [];
+        setMovies(moviesArray);
         setLoading(false);
       });
   }, []);
@@ -98,9 +99,10 @@ export default function Search() {
           </select>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {searchResults.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
+          {searchResults.map((movie, index) => {
+            const key = movie.id ?? movie._id ?? `${movie.title}-${movie.year}-${index}`;
+            return <MovieCard key={key} movie={movie} />;
+          })}
         </div>
         {!loading && searchResults.length === 0 && (
           <div className="text-white mt-8">Aucun film trouvé.</div>

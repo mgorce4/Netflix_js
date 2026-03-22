@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { useCart } from "../../context/CartContext.jsx";
+import { useCart } from "../../context/CartContext";
 
 function CartButton() {
-	const { cartItems, removeFromCart } = useCart();
+	const { cart, removeFromCart, getCartCount, getCartTotal } = useCart();
 	const [showCart, setShowCart] = useState(false);
-	const cartCount = cartItems.length;
+	const cartCount = getCartCount();
 
 	const toggleShow = () => setShowCart((prev) => !prev);
 
-	// Suppression au double-clic
 	const handleRemove = (id) => {
 		removeFromCart(id);
 	};
@@ -33,18 +32,18 @@ function CartButton() {
 			{showCart && (
 				<div className="absolute right-0 mt-8 w-80 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-4 z-50">
 					<h3 className="text-lg font-bold mb-2">Mon panier</h3>
-					{cartItems.length === 0 ? (
+					{cart.length === 0 ? (
 						<div className="text-gray-400">Aucun film dans le panier.</div>
 					) : (
 						<ul>
-							{cartItems.map((item) => (
+							{cart.map((item) => (
 								<li
 									key={item.id}
 									className="flex items-center justify-between py-2 border-b border-gray-800 cursor-pointer hover:bg-gray-800 rounded px-2"
 									onDoubleClick={() => handleRemove(item.id)}
 									title="Double-cliquez pour retirer"
 								>
-									<span className="truncate max-w-[150px]">{item.title}</span>
+									  <span className="truncate max-w-37.5">{item.title}</span>
 									<span className="text-primary font-bold">{item.price}€</span>
 								</li>
 							))}
@@ -53,7 +52,7 @@ function CartButton() {
 					<div className="mt-3 text-right">
 						<span className="font-semibold">Total: </span>
 						<span className="text-primary font-bold">
-							{cartItems.reduce((sum, m) => sum + (m.price || 0), 0)}€
+							{getCartTotal()}€
 						</span>
 					</div>
 					<div className="text-xs text-gray-400 mt-2">Double-cliquez sur un film pour le retirer.</div>
@@ -62,4 +61,5 @@ function CartButton() {
 		</div>
 	);
 }
+
 export default CartButton;
