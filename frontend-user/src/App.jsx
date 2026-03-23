@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext';
 import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import MyRentals from './pages/MyRentals';
+import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
@@ -18,6 +19,7 @@ function App() {
           {/* Routes publiques */}
           <Route path="/" element={<Home />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/search" element={<Search />} />

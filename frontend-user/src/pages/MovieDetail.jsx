@@ -4,6 +4,7 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/layout/Footer';
 import Button from '../components/common/Button';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import Breadcrumb from '../components/common/Breadcrumb';
 
 function MovieDetail() {
@@ -12,7 +13,8 @@ function MovieDetail() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { addToCart, rentMovie, isRented, isInCart } = useCart();
+  const { addToCart, rentMovie, isRented, isInCart, getRentalByMovieId } = useCart();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     // Charger tous les films depuis l'API et trouver celui correspondant à l'ID
@@ -25,8 +27,11 @@ function MovieDetail() {
       })
       .then((data) => {
         const moviesArray = Array.isArray(data) ? data : data.movies || [];
-        // Trouver le film avec l'ID correspondant
-        const foundMovie = moviesArray.find((m) => m.id === parseInt(id));
+        // Trouver le film avec l'ID correspondant (numérique ou MongoDB)
+        const foundMovie = moviesArray.find((m) => {
+          const movieId = m.id ?? m._id;
+          return String(movieId) === String(id);
+        });
         if (foundMovie) {
           setMovie(foundMovie);
         } else {
@@ -41,18 +46,33 @@ function MovieDetail() {
       });
   }, [id]);
 
-  const alreadyRented = movie ? isRented(movie.id) : false;
-  const inCart = movie ? isInCart(movie.id) : false;
+  const movieKey = movie ? (movie.id ?? movie._id) : null;
+  const alreadyRented = movieKey ? isRented(movieKey) : false;
+  const inCart = movieKey ? isInCart(movieKey) : false;
+  const rentalInfo = movieKey ? getRentalByMovieId(movieKey) : null;
 
   const handleAddToCart = () => {
-    if (movie && !inCart && !alreadyRented) {
-      addToCart(movie);
+    if (!movie || inCart || alreadyRented) return;
+
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
     }
+
+    addToCart(movie);
   };
 
   const handleRentNow = () => {
-    if (movie && !alreadyRented) {
-      rentMovie(movie);
+    if (!movie || alreadyRented) return;
+
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+
+    const result = rentMovie(movie);
+    if (result?.success) {
+      // On reste sur la page détail mais la bannière de location s'affichera
     }
   };
 
@@ -152,6 +172,18 @@ function MovieDetail() {
             <p className="text-gray-300 text-lg leading-relaxed mb-8">
               {movie.description}
             </p>
+            {alreadyRented && rentalInfo && rentalInfo.expiryDate && (() => {
+              const d = new Date(rentalInfo.expiryDate);
+              const isValid = !Number.isNaN(d.getTime());
+              const label = isValid
+                ? d.toLocaleDateString("fr-FR")
+                : rentalInfo.expiryDate; // déjà formaté (ex: 21/02/2026)
+              return (
+                <div className="mb-6 inline-block bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded">
+                  Film loué jusqu'au {label}
+                </div>
+              );
+            })()}
 
             {/* Actions panier / location */}
             <div className="mb-8 flex flex-col sm:flex-row gap-3">

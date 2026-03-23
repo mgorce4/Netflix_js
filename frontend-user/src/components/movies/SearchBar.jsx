@@ -28,7 +28,9 @@ function SearchBar({ movies, onSearch }) {
   const handleSelect = (movie) => {
     setSearchTerm("");
     setIsOpen(false);
-    navigate(`/movie/${movie.id}`);
+    const movieId = movie.id ?? movie._id;
+    if (!movieId) return;
+    navigate(`/movie/${movieId}`);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,7 +78,7 @@ function SearchBar({ movies, onSearch }) {
         <div className="absolute left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           {suggestions.map((movie) => (
             <div
-              key={movie.id}
+              key={movie.id ?? movie._id}
               className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-800 transition-colors border-b border-gray-800 last:border-b-0"
               onMouseDown={() => handleSelect(movie)}
             >

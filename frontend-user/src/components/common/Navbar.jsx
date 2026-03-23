@@ -61,7 +61,7 @@ function Navbar() {
             to="/"
             className={({ isActive }) =>
               `text-sm md:text-base hover:text-white transition ${
-                isActive ? "text-white font-semibold" : "text-gray-300"
+                isActive ? "text-white font-semibold" : "text-white/80"
               }`
             }
           >
@@ -71,7 +71,7 @@ function Navbar() {
             to="/my-rentals"
             className={({ isActive }) =>
               `text-sm md:text-base hover:text-white transition ${
-                isActive ? "text-white font-semibold" : "text-gray-300"
+                isActive ? "text-white font-semibold" : "text-white/80"
               }`
             }
           >
@@ -96,7 +96,7 @@ function Navbar() {
                   alt={user.name}
                   className="w-8 h-8 rounded cursor-pointer hover:ring-2 hover:ring-primary transition"
                 />
-                <span className="hidden md:block text-sm">{user.name}</span>
+                <span className="hidden md:block text-sm text-white">{user.name}</span>
               </button>
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-black/95 backdrop-blur-lg border border-gray-800 rounded-lg shadow-xl py-2">

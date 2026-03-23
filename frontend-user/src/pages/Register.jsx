@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Register() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -42,17 +44,17 @@ function Register() {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-        })
-      );
-      setLoading(false);
+    const result = await register(formData.name, formData.email, formData.password);
+    setLoading(false);
+
+    if (result.success) {
       navigate("/");
-    }, 1000);
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        general: result.error || "Erreur lors de l'inscription. Veuillez réessayer.",
+      }));
+    }
   };
 
   return (
@@ -63,6 +65,9 @@ function Register() {
         className="bg-black border border-gray-700 rounded-lg p-8 w-full max-w-md flex flex-col gap-5 shadow-lg"
       >
         <h2 className="text-2xl font-bold text-white mb-4">S'inscrire</h2>
+        {errors.general && (
+          <div className="text-red-500 text-sm mb-2">{errors.general}</div>
+        )}
         <div>
           <input
             name="name"

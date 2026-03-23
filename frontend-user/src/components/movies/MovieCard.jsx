@@ -58,6 +58,7 @@ import { useCart } from "../../context/CartContext.jsx";
 
 function MovieCard({ movie }) {
   const navigate = useNavigate();
+  const movieId = movie.id ?? movie._id;
   // Like state
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(movie.likes || 0);
@@ -68,11 +69,11 @@ function MovieCard({ movie }) {
 
   // Synchroniser isRented avec le panier
   useEffect(() => {
-    if (!cart.find((item) => item.id === movie.id)) {
+    if (!cart.find((item) => item.id === movieId)) {
       setIsRented(false);
       setExpiryDate(null);
     }
-  }, [cart, movie.id]);
+  }, [cart, movieId]);
 
   // Fonction de gestion du like
   const handleLike = (e) => {
@@ -98,21 +99,23 @@ function MovieCard({ movie }) {
     // Ajout dans localStorage (clé rentals)
     const rentals = JSON.parse(localStorage.getItem("rentals") || "[]");
     // On évite les doublons
-    if (!rentals.find((m) => m.id === movie.id)) {
-      rentals.push({ ...movie, expiryDate: expire.toLocaleDateString() });
+    if (!rentals.find((m) => (m.id ?? m.movieId ?? m._id) === movieId)) {
+      rentals.push({ ...movie, id: movieId, movieId, expiryDate: expire.toLocaleDateString() });
       localStorage.setItem("rentals", JSON.stringify(rentals));
     }
   };
 
   // Navigation vers la page de détail
   const handleCardClick = () => {
-    navigate(`/movie/${movie.id}`);
+    if (!movieId) return;
+    navigate(`/movie/${movieId}`);
   };
 
   // Handler pour le bouton Info (même action que clic sur la carte)
   const handleInfo = (e) => {
     e.stopPropagation();
-    navigate(`/movie/${movie.id}`);
+    if (!movieId) return;
+    navigate(`/movie/${movieId}`);
   };
 
   return (
