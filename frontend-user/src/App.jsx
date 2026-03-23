@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { NotificationProvider } from './context/NotificationContext';
 import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import MyRentals from './pages/MyRentals';
@@ -13,9 +14,10 @@ import Search from './pages/Search';
 
 function App() {
   return (
-    <CartProvider>
-      <AuthProvider>
-        <Routes>
+    <NotificationProvider>
+      <CartProvider>
+        <AuthProvider>
+          <Routes>
           {/* Routes publiques */}
           <Route path="/" element={<Home />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
@@ -37,8 +39,9 @@ function App() {
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </AuthProvider>
-    </CartProvider>
+        </AuthProvider>
+      </CartProvider>
+    </NotificationProvider>
   );
 }
 
